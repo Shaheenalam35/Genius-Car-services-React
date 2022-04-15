@@ -8,6 +8,7 @@ import auth from "../../../firebase.init";
 import "./Register.css";
 import SocialLogin from "../SocialLogin/SocialLogin";
 import { async } from "@firebase/util";
+import Loading from "../../../Shared/Loading/Loading";
 
 const Register = () => {
   const [createUserWithEmailAndPassword, user, loading, error] =
@@ -20,6 +21,11 @@ const Register = () => {
   const navigateLogin = () => {
     navigate("/login");
   };
+
+  if (loading || updating) {
+    return <Loading></Loading>;
+  }
+
   const handleRegister = async (event) => {
     event.preventDefault();
     const name = event.target.name.value;
