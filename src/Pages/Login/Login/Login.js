@@ -24,7 +24,10 @@ const Login = () => {
   if (user) {
     navigate(from, { replace: true });
   }
-
+  let errorElement;
+  if (error) {
+    errorElement = <p className="text-danger">Error: {error?.message}</p>;
+  }
   const navigateRegister = () => {
     navigate("/register");
   };
@@ -57,6 +60,7 @@ const Login = () => {
           Submit
         </Button>
       </Form>
+      {errorElement}
       <p>
         New to Genius ?
         <Link
