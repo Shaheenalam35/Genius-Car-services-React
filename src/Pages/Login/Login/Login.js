@@ -1,6 +1,9 @@
 import React, { useRef } from "react";
 import { Button, Form } from "react-bootstrap";
-import { useSignInWithEmailAndPassword } from "react-firebase-hooks/auth";
+import {
+  useSendPasswordResetEmail,
+  useSignInWithEmailAndPassword,
+} from "react-firebase-hooks/auth";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import auth from "../../../firebase.init";
 import SocialLogin from "../SocialLogin/SocialLogin";
@@ -8,6 +11,7 @@ import SocialLogin from "../SocialLogin/SocialLogin";
 const Login = () => {
   const [signInWithEmailAndPassword, user, loading, error] =
     useSignInWithEmailAndPassword(auth);
+  const [sendPasswordResetEmail, sending] = useSendPasswordResetEmail(auth);
   const navigate = useNavigate();
   let location = useLocation();
   let from = location.state?.from?.pathname || "/";
@@ -20,6 +24,12 @@ const Login = () => {
     const password = passwordRef.current.value;
 
     signInWithEmailAndPassword(email, password);
+  };
+
+  const resetPassword = async () => {
+    const email = emailRef.current.value;
+    await sendPasswordResetEmail(email);
+    alert("Sent email");
   };
   if (user) {
     navigate(from, { replace: true });
@@ -53,11 +63,9 @@ const Login = () => {
             required
           />
         </Form.Group>
-        <Form.Group className="mb-3" controlId="formBasicCheckbox">
-          <Form.Check type="checkbox" label="Check me out" />
-        </Form.Group>
-        <Button variant="primary" type="submit">
-          Submit
+
+        <Button variant="primary w-50 mx-auto d-block mb-2" type="submit">
+          Login
         </Button>
       </Form>
       {errorElement}
@@ -65,10 +73,20 @@ const Login = () => {
         New to Genius ?
         <Link
           to="/register"
-          className="text-danger pe-auto text-decoration-none "
+          className="text-primary pe-auto text-decoration-none "
           onClick={navigateRegister}
         >
           Please Register
+        </Link>
+      </p>
+      <p>
+        Forgotten password ?
+        <Link
+          to="/register"
+          className="text-primary pe-auto text-decoration-none "
+          onClick={resetPassword}
+        >
+          Reset Password
         </Link>
       </p>
       <SocialLogin></SocialLogin>
